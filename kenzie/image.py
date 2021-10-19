@@ -13,21 +13,19 @@ def upload_item():
     file_name = str(request.files['file'].filename)
     file_ext = str(request.files['file'].filename).split(".")
     file_size = len(request.files['file'].read())
-    folder_file = os.listdir(f'./files_directory/{file_ext[1]}')
     if file_ext[1] not in allowed_ext:
         return {"message": "Formato não suportado"}, 415
     if file_size > 1 * 1000 * 1000:
         return {"message": "Tamanho grandão"}, 413
-    if file_name in folder_file:
+    if file_name in os.listdir(f'./files_directory/{file_ext[1]}'):
         return {"message": "Arquivo já existe"}, 409
-        
     else:
         with open(f'./file', 'wb') as f:
             f.write(request.data)
             first_file = request.files['file']
             first_file.save(f'./files_directory/{file_ext[1]}/{file_name}')
+        return {"message": f"Upload do arquivo {file_ext[0]}"},201
 
-    return {"message": f"Upload do arquivo {file_ext[0]}"},201
 
 
 def list_files():
@@ -45,8 +43,7 @@ def list_by_type(ext):
 
 def download(file_name):
     ext = file_name[-3:]
-    main_list = os.listdir(path=f'./files_directory/{ext}')
-    if file_name not in main_list:
+    if ext not in allowed_ext or file_name not in os.listdir(path=f'./files_directory/{ext}'):
         return {"msg": "O arquivo não existe neste diretório"}, 404
     else:
         return send_from_directory(directory=f"../files_directory/{ext}", path=file_name, as_attachment=True), 200
