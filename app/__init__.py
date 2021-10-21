@@ -1,10 +1,10 @@
 from flask import Flask
-from kenzie import make_directory
-from kenzie.image import download, download_zip, list_by_type, list_files, upload_item
-
+from .kenzie import make_directory
+from .kenzie.image import download, download_zip, list_by_type, list_files, upload_item
+import os
 
 app = Flask(__name__)
-
+app.config['MAX_CONTENT_LENGTH'] = 1*1000*1000
 
 make_directory()
 
