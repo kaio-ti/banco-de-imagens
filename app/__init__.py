@@ -20,8 +20,8 @@ def files():
 
 
 @app.get('/files/<ext>')
-def list_files_by_extension():
-    return list_by_type()
+def list_files_by_extension(ext):
+    return list_by_type(ext)
 
 
 @app.get('/download/<file_name>')
